@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style>
+        th,td { text-align: center; }
+
+        #btnPesquisar{ margin-top: 27px; margin-left: -15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="hidden" id="hiddenEmail">
+
+        <!-- BEGIN divLogadoComo  -->
+        <div id="divLogadoComo" class="row form-group">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+        </div>
+        <!-- END divLogadoComo  -->
+        
+        <!-- BEGIN divPesquisarEmail  -->
+        <div id="divPesquisarEmail">
+            <div class="row form-group">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label for="" class="control-label">Email</label>
+                    <input type="text" class="form-control" id="emailPesquisa">
+                </div>
+                <div class="col-md-2">
+                    <button id="btnPesquisar" class="btn btn-primary btn-sm" onclick="PesquisarEmail()">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <hr />
+                </div>
+            </div>
+        </div>
+        <!-- END divPesquisarEmail  -->
+
+        <!-- BEGIN FORM  -->
+        <form>
+            <div class="row form-group">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label for="" class="control-label">Email</label>
+                    <input type="text" class="form-control" id="email">
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label for="" class="control-label">Meta</label>
+                    <input type="text" class="form-control" id="meta">
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label for="" class="control-label">Descrição</label>
+                    <input type="text" class="form-control" id="descricao">
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label for="" class="control-label">Tempo</label>
+                    <input type="text" class="form-control" id="tempo">
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <input type="button" value="Salvar" class="btn btn-primary btn-sm btn-block" id="btnSalvar" onclick="Salvar()">
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </form>
+        <!-- END FORM  -->
+
+        <!-- BEGIN DIVLISTAMETAS  -->
+        <div class="row form-group">
+            <div class="col-md-3"></div>
+            <div class="col-md-6" id="divListaMetas">
+
+            </div>
+            <div class="col-md-3"></div>
+        </div>    
+        <!-- END DIVLISTAMETAS  -->
+
+        
+
+    </div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>    
+    <script src="trabalho.js"></script>
+</body>
+</html>
