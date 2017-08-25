@@ -8,6 +8,10 @@ $(document).ready(function()
 
 function Salvar() 
 {
+    if
+    (!PossuiValor($("#email").val()) || !PossuiValor($("#meta").val()) || !PossuiValor($("#descricao").val()) || !PossuiValor($("#tempo").val()))
+        return false;
+
     //Recupera o último valor do id
     var id = JSON.parse(localStorage.getItem("id"));
 
@@ -267,8 +271,161 @@ function ExcluirSelecionados()
     ListarMetas(emailLogado);
 }
 
+//COLOCAR O CONTEÚDO DO divListaMetas EM UMA VAR PARA DEPOIS RENDERIZAR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 //Mostra info e cadastro das parcelas da meta e também o gráfico
 function MostrarInfoMeta(idMeta) 
+{
+    var emailLogado = $("#hiddenEmail").val();
+
+    var usuarioLogado = JSON.parse(localStorage.getItem(emailLogado));
+
+    var meta;               //ONDE HÁ meta TROCAR POR usuarioLogado.META[i] e colocar tudo dentro do for abaixo
+    
+    for(var i=0; i < usuarioLogado.META.length; i++)
+        if(usuarioLogado.META[i].ID == idMeta)
+            meta = usuarioLogado.META[i];
+
+    if($("#divInfoMeta").length)
+        $("#divInfoMeta").remove();
+
+    //Adiciona a divListaMetas na qual ficarão as informações referentes a meta.
+    //Adiciona a divInfoValores na qual ficarão as Informações dos meses com valores e formulário para cadastro de valores dos meses
+    //Mostra info da meta: descricao, tempo, parcelas pagas, valor restante, quantidade parcelas
+    $("#divListaMetas").parent().after
+    (
+        '<div id="divInfoMeta">' +
+            '<div class="panel panel-primary">' +
+                '<div class="panel-heading">' +
+                    '<h3 class="panel-title">Informações Sobre a Meta</h3>' +
+                '</div>' +
+                '<div class="panel-body">' +
+                    //BEGIN ROW
+                    '<div class="row form-group">' +
+                        '<div class="col-md-3"></div>' +
+                        '<div class="col-md-6">' +
+                            '<div class="list-group">' +
+                                '<a href="#" class="list-group-item">' +
+                                    '<h4 class="list-group-item-heading text-center">Descrição Meta</h4>' +
+                                    '<p class="list-group-item-text text-center" style="word-wrap: break-word">' + // CSS para o texto não sair para fora da div
+                                        meta.DESCRICAO                 +
+                                    '</p>' +
+                                '</a>' +
+                                '<a href="#" class="list-group-item">' +
+                                    '<h4 class="list-group-item-heading text-center">Tempo em Anos</h4>' +
+                                    '<p class="list-group-item-text text-center">' +
+                                        meta.TEMPO                 +
+                                    '</p>' +
+                                '</a>' +
+                                '<a href="#" class="list-group-item">' +
+                                    '<h4 class="list-group-item-heading text-center">Quantidade de parcelas</h4>' +
+                                    '<p class="list-group-item-text text-center">' +
+                                        meta.QTD_PARCELAS                 +
+                                    '</p>' +
+                                '</a>' +
+                                '<a href="#" class="list-group-item">' +
+                                    '<h4 class="list-group-item-heading text-center">Parcelas Pagas</h4>' +
+                                    '<p class="list-group-item-text text-center">' +
+                                        meta.PARCELAS_PAGAS                 +
+                                    '</p>' +
+                                '</a>' +
+                                '<a href="#" class="list-group-item">' +
+                                    '<h4 class="list-group-item-heading text-center">Valor Restante</h4>' +
+                                    '<p class="list-group-item-text text-center">' +
+                                        meta.VALOR_META_RESTANTE                 +
+                                    '</p>' +
+                                '</a>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-3"></div>' +
+                    //END ROW
+                    '</div>' +
+                    //BEGIN DIV INFO VALORES
+                    '<div class="row form-group">' +
+                        '<div class="col-md-4"></div>' +
+                        '<div class="col-md-4" id="divInfoValores">' +
+                            
+                        '</div>' +
+                        '<div class="col-md-4"></div>' +
+                    '</div>' +
+                    //END DIV INFO VALORES
+                // END PANEL-BODY
+                '</div>' +
+            //END PANEL
+            '</div>' + 
+        //END divInfoMeta
+        '</div>'
+    );
+
+    //Itens da lista recebem classe active e ficam destacados de azul quando usuário passa o cursor sobre eles.
+    $(".list-group-item").hover(function(){
+        $(this).addClass("active");
+    }, function(){
+    
+        $(this).removeClass("active");
+    });
+
+    //Mostra lista de meses com valor e formulário para colocar valor adquirido
+    var qtdParcelasPagas = meta.PARCELAS_PAGAS;
+    var qtdParcelas = meta.QTD_PARCELAS;
+
+    var txtListaValores = "<ul class='list-group'>";
+
+    if(qtdParcelasPagas != qtdParcelas)
+    {
+        for(var i=0; i < qtdParcelasPagas; i++)
+        {   
+            txtListaValores += 
+            "<li class='list-group-item'>" + meta.PARCELAS[i] + "</li>";
+        }
+        txtListaValores += "</ul>";
+
+        //Renderiza na divInfoValores os valores dos meses e o formulário
+        $("#divInfoValores").html(txtListaValores);
+
+        //coloca o formulário, para salvar valor do mês, depois da lista dos meses com valores obtidos
+        var txtFormValor =
+        '<div id="divFormMes">' + 
+            '<div class="row form-group">' +
+                '<div class="col-md-4"></div>' +
+                '<div class="col-md-4" id="divFormMes">' +
+                    '<label for="" class="control-label">Informe o valo do ' + (i + 1) + 'o mês</label>' +
+                    '<input type="text" class="form-control" id="valorMes">' +
+                '</div>' +
+                '<div class="col-md-4"></div>' +
+            '</div>' +
+            '<div class="row form-group">' +
+            '<div class="col-md-4"></div>' +
+                '<div class="col-md-4">' +
+                    '<input type="button" value="Salvar" class="btn btn-primary btn-sm btn-block" id="btnSalvarValorMes" onclick="SalvarValorMes(' + idMeta + ')">' +
+                '</div>' +
+                '<div class="col-md-4"></div>' +
+            '</div>' +
+        '</div>';
+
+        //Renderiza o formulário para salvar valor dos meses
+        $("#divInfoValores").parent().after(txtFormValor);
+    }
+    else
+    {
+        var txtListaValores = 
+        "<ul class='list-group'>"; 
+
+        for(var i=0; i < meta.length; i++)
+        {
+            txtListaValores +=
+            "<li class='list-group-item'>" + meta.PARCELAS[i] + "</li>";
+        }
+        txtListaValores += 
+        "</ul>";
+
+        $("#divInfoValores").html(txtListaValores);
+    }
+
+    //Mostra gráfico
+}
+
+//Salva valor obtido do mês em uma meta específica das metas que estão na conta do usuário 
+function SalvarValorMes(idMeta) 
 {
     var emailLogado = $("#hiddenEmail").val();
 
@@ -278,72 +435,19 @@ function MostrarInfoMeta(idMeta)
     
     for(var i=0; i < usuarioLogado.META.length; i++)
         if(usuarioLogado.META[i].ID == idMeta)
-            meta = usuarioLogado.META[i];
+        {                                                                //meta = usuarioLogado.META[i];
+            var qtdParcelasPagas = usuarioLogado.META[i].PARCELAS_PAGAS;
 
-    if($("#divInfoMeta").length)
-        $("#divInfoMeta").remove();
-
-    //Adiciona a divListaMetas na qual ficarão as informações referentes a meta
-    //Mostra info da meta: descricao, tempo, parcelas pagas, valor restante, quantidade parcelas
-    $("#divListaMetas").parent().after
-    (
-        '<div class="row form-group" id="divInfoMeta">' +
-            '<div class="col-md-3"></div>' +
-            '<div class="col-md-6">' +
-                '<div class="list-group">' +
-                    '<a href="#" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading text-center">Descrição Meta</h4>' +
-                        '<p class="list-group-item-text text-center" style="word-wrap: break-word">' + // CSS para o texto não sair para fora da div
-                            meta.DESCRICAO                 +
-                        '</p>' +
-                    '</a>' +
-                    '<a href="#" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading text-center">Tempo em Anos</h4>' +
-                        '<p class="list-group-item-text text-center">' +
-                            meta.TEMPO                 +
-                        '</p>' +
-                    '</a>' +
-                    '<a href="#" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading text-center">Quantidade de parcelas</h4>' +
-                        '<p class="list-group-item-text text-center">' +
-                            meta.QTD_PARCELAS                 +
-                        '</p>' +
-                    '</a>' +
-                    '<a href="#" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading text-center">Parcelas Pagas</h4>' +
-                        '<p class="list-group-item-text text-center">' +
-                            meta.PARCELAS_PAGAS                 +
-                        '</p>' +
-                    '</a>' +
-                    '<a href="#" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading text-center">Valor Restante</h4>' +
-                        '<p class="list-group-item-text text-center">' +
-                            meta.VALOR_META_RESTANTE                 +
-                        '</p>' +
-                    '</a>' +
-                '</div>' +
-            '</div>' +
-            '<div class="col-md-3"></div>' +
-        '</div>'
-    );
-
-    //Itens da lista recebem classe active e ficam destacados quando usuário passa o cursor sobre eles.
-    $(".list-group-item").hover(function(){
-
-        $(this).addClass("active");
-    }, function(){
-    
-        $(this).removeClass("active");
-    });
-
-    //Mostra valores que o usuário conseguiu de cada mês
-
-    //Mostra formulário para colocar valor adquirido
-
-    //Mostra gráfico
+            usuarioLogado.META[i].PARCELAS[qtdParcelasPagas] = $("#valorMes").val();
+            usuarioLogado.META[i].PARCELAS_PAGAS++;
+            usuarioLogado.META[i].VALOR_META_RESTANTE = parseInt(usuarioLogado.META[i].VALOR_META_RESTANTE) - parseInt($("#valorMes").val());
+            
+            localStorage.setItem(email, JSON.stringify(usuarioLogado));
+        }                                                   
 }
 
 function Sair() 
 {
     location.reload();
 }
+
